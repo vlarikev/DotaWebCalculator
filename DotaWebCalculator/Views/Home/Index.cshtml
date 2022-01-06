@@ -1,0 +1,20 @@
+﻿@using DotaWebCalculator.Models
+@model IEnumerable<Hero>
+
+@{
+    ViewData["Title"] = "All Heroes";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Choose Hero</h1>
+    <p>
+        @{
+            foreach (var hero in Model)
+            {
+                <div>
+                    <h2>Hero name: @hero.heroName</h2>
+                </div>
+            }
+        }
+    </p>
+</div>
