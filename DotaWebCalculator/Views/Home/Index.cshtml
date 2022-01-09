@@ -6,15 +6,21 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Choose Hero</h1>
+    <h3 class="display-4">Choose Ally Hero</h3>
     <p>
-        @{
+
+        @using (Html.BeginForm("ChooseAlly", "Home", FormMethod.Post))
+        {
+            int radioId1 = 0;
             foreach (var hero in Model)
             {
                 <div>
-                    <h2>Hero name: @hero.heroName</h2>
+                    <input type="radio" name="radioAlly" value="radioAlly_@radioId1" asp-action="ChooseAlly"/>@hero.heroName
                 </div>
+                radioId1++;
             }
+            <input type="submit" class="btn-primary" value="Submit" />
         }
     </p>
+    <h4>!!!</h4>
 </div>

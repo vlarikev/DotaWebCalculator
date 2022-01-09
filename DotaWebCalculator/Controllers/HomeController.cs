@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using DotaWebCalculator.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotaWebCalculator.Controllers
@@ -20,8 +21,13 @@ namespace DotaWebCalculator.Controllers
         public IActionResult Index()
         {
             var heroes = allHeroes.AllHeroes;
-
             return View(heroes);
+        }
+
+        public IActionResult ChooseAlly()
+        {
+            HttpContext.Session.SetString("testSession", "test session string");
+            return View();
         }
     }
 }
