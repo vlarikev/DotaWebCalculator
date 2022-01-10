@@ -1,26 +1,67 @@
 ﻿@using DotaWebCalculator.Models
+@using Microsoft.AspNetCore.Http
 @model IEnumerable<Hero>
 
 @{
     ViewData["Title"] = "All Heroes";
 }
-
-<div class="text-center">
-    <h3 class="display-4">Choose Ally Hero</h3>
-    <p>
-
-        @using (Html.BeginForm("ChooseAlly", "Home", FormMethod.Post))
-        {
-            int radioId1 = 0;
-            foreach (var hero in Model)
-            {
-                <div>
-                    <input type="radio" name="radioAlly" value="radioAlly_@radioId1" asp-action="ChooseAlly"/>@hero.heroName
-                </div>
-                radioId1++;
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4 text-center">Choose Ally Hero</h1>
+            <div class="text-center">
+                <p>
+                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                {
+                    int buttonId1 = 0;
+                    foreach (var hero in Model)
+                    {
+                        <button type="submit" class="btn btn-success" name="buttonValue" value="ally_@buttonId1" asp-action="Index">@hero.heroName</button>
+                        buttonId1++;
+                    }
+                }
+                </p>
+            </div>
+            @{
+                if (Context.Session.GetInt32("isAllyChosen") != 0)
+                {   
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="text-center">@Context.Session.GetString("chosenAlly")</h4>
+                    </div>
+                }
             }
-            <input type="submit" class="btn-primary" value="Submit" />
+        </div>
+        <div class="col">
+            <h1 class="display-4 text-center">Choose Enemy Hero</h1>
+            <p>
+                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                {
+                    int buttonId1 = 0;
+                    foreach (var hero in Model)
+                    {
+                        <button type="submit" class="btn btn-danger" name="buttonValue" value="enemy_@buttonId1" asp-action="Index">@hero.heroName</button>
+                        buttonId1++;
+                    }
+                }
+            </p>
+            @{
+                if (Context.Session.GetInt32("isEnemyChosen") != 0)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="text-center">@Context.Session.GetString("chosenEnemy")</h4>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="text-center">
+        <br/>
+        @{
+            if(Context.Session.GetInt32("isEnemyChosen") != 0 && Context.Session.GetInt32("isAllyChosen") != 0)
+            {
+                <input type="button" class="btn btn-primary btn-lg" value="Go to Calculator" onclick="location.href='@Url.Action("Calculator", "Home")'"/>
+            }
         }
-    </p>
-    <h4>!!!</h4>
+    </div>
 </div>
