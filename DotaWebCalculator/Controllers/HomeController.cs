@@ -7,16 +7,19 @@ using DotaWebCalculator.Interfaces;
 using DotaWebCalculator.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace DotaWebCalculator.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IHeroes allHeroes;
+        private readonly IItems allitems;
 
-        public HomeController(IHeroes iAllHeroes)
+        public HomeController(IHeroes iAllHeroes, IItems iAllItems)
         {
             allHeroes = iAllHeroes;
+            allitems = iAllItems;
         }
 
         public IActionResult Index()
@@ -48,15 +51,54 @@ namespace DotaWebCalculator.Controllers
             return View(GetAllHeroes());
         }
 
+        private const int maxSlot = 6;
         public IActionResult Calculator()
         {
-            return View();
+            return View(GetAllItems());
+        }
+
+        [HttpPost]
+        public IActionResult Calculator(string buttonValue)
+        {
+            string[] strParts = buttonValue.Split("_");
+
+            if (strParts[0] == "ally")
+                InventoryUpdate("allyItem_", strParts[1]);
+
+            if (strParts[0] == "enemy")
+                InventoryUpdate("enemyItem_", strParts[1]);
+
+            return View(GetAllItems());
+        }
+        private void InventoryUpdate(string value, string part)
+        {
+            for (int i = 0; i < maxSlot; i++)
+            {
+                if (HttpContext.Session.GetString(value + i) == "" || HttpContext.Session.GetString(value + i) == null)
+                {
+                    HttpContext.Session.SetString(value + i,
+                        GetAllItems().Where(i => i.itemId == int.Parse(part)).FirstOrDefault().itemName);
+                    break;
+                }
+            }
+        }
+
+        public IActionResult SellItem(string buttonValue)
+        {
+            HttpContext.Session.SetString(buttonValue, "");
+
+            return RedirectToAction("Calculator", GetAllItems());
         }
 
         private IEnumerable<Hero> GetAllHeroes()
         {
             var heroes = allHeroes.AllHeroes;
             return heroes;
+        }
+        private IEnumerable<Item> GetAllItems()
+        {
+            var items = allitems.AllItems;
+            return items;
         }
     }
 }

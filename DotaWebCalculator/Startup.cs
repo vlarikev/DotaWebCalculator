@@ -27,6 +27,7 @@ namespace DotaWebCalculator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IHeroes, MockHero>();
+            services.AddTransient<IItems, MockItem>();
             services.AddMvc();
             services.AddControllersWithViews();
 

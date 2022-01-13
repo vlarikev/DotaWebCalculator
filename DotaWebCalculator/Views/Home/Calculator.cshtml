@@ -1,4 +1,7 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@using DotaWebCalculator.Models
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@model IEnumerable<Item>
 
 @{
     ViewData["Title"] = "Calculator";
@@ -8,9 +11,53 @@
     <div class="row">
         <div class="col">
             <h1 class="display-4 text-center">@Context.Session.GetString("chosenAlly") inventory</h1>
+            <div class="text-center">
+                <p>
+                @using (Html.BeginForm("Calculator", "Home", FormMethod.Post))
+                {
+                    int buttonId1 = 0;
+                    foreach (var item in Model)
+                    {
+                        <button type="submit" class="btn btn-success" name="buttonValue" value="ally_@buttonId1" asp-action="Calculator">@item.itemName</button>
+                        buttonId1++;
+                    }
+                }
+                </p>
+            </div>
+            <form>
+                @{
+                    for (int i = 0; i < 6; i++)
+                    {
+                        <button type="submit" class="btn btn-success" name="buttonValue" value="allyItem_@i"
+                            asp-action="SellItem">@Context.Session.GetString("allyItem_" + i)</button>
+                    }
+                }
+            </form>
         </div>
         <div class="col">
             <h1 class="display-4 text-center">@Context.Session.GetString("chosenEnemy") inventory</h1>
+            <div class="text-center">
+                <p>
+                @using (Html.BeginForm("Calculator", "Home", FormMethod.Post))
+                {
+                    int buttonId1 = 0;
+                    foreach (var item in Model)
+                    {
+                        <button type="submit" class="btn btn-success" name="buttonValue" value="enemy_@buttonId1" asp-action="Calculator">@item.itemName</button>
+                        buttonId1++;
+                    }
+                }
+                </p>
+            </div>
+            <form>
+                @{
+                    for (int i = 0; i < 6; i++)
+                    {
+                        <button type="submit" class="btn btn-success" name="buttonValue" value="enemyItem_@i"
+                            asp-action="SellItem">@Context.Session.GetString("enemyItem_" + i)</button>
+                    }
+                }
+            </form>
         </div>
     </div>
 </div>

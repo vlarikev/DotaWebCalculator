@@ -33,17 +33,19 @@
         </div>
         <div class="col">
             <h1 class="display-4 text-center">Choose Enemy Hero</h1>
-            <p>
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                {
-                    int buttonId1 = 0;
-                    foreach (var hero in Model)
+            <div class="text-center">
+                <p>
+                    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
                     {
-                        <button type="submit" class="btn btn-danger" name="buttonValue" value="enemy_@buttonId1" asp-action="Index">@hero.heroName</button>
-                        buttonId1++;
+                        int buttonId1 = 0;
+                        foreach (var hero in Model)
+                        {
+                            <button type="submit" class="btn btn-danger" name="buttonValue" value="enemy_@buttonId1" asp-action="Index">@hero.heroName</button>
+                            buttonId1++;
+                        }
                     }
-                }
-            </p>
+                </p>
+            </div>
             @{
                 if (Context.Session.GetInt32("isEnemyChosen") != 0)
                 {
