@@ -1,7 +1,7 @@
 ﻿@using DotaWebCalculator.Models
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
-@model IEnumerable<Item>
+@model dynamic
 
 @{
     ViewData["Title"] = "Calculator";
@@ -10,54 +10,112 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h1 class="display-4 text-center">@Context.Session.GetString("chosenAlly") inventory</h1>
             <div class="text-center">
                 <p>
-                @using (Html.BeginForm("Calculator", "Home", FormMethod.Post))
-                {
-                    int buttonId1 = 0;
-                    foreach (var item in Model)
-                    {
-                        <button type="submit" class="btn btn-success" name="buttonValue" value="ally_@buttonId1" asp-action="Calculator">@item.itemName</button>
-                        buttonId1++;
+                    @{
+                        foreach (var hero in Model.Heroes)
+                        {
+                            if (hero.heroName == Context.Session.GetString("chosenAlly"))
+                            {
+                                <h2>@hero.heroName</h2>
+                                <h5>Strength: @hero.heroStatRed</h5>
+                                <h5>Agility: @hero.heroStatGreen</h5>
+                                <h5>Intelligence: @hero.heroStatBlue</h5>
+                                <h5>Health: @hero.heroHealth</h5>
+                                <h5>Mana: @hero.heroMana</h5>
+                                <h5>Attack Damage: @hero.heroAttackDmgLower-@hero.heroAttackDmgHigher</h5>
+                                int attackSpeed = hero.heroAttackSpeed + hero.heroStatGreen;
+                                <h5>Attack Speed: @attackSpeed</h5>
+                                <h5>Armor: @hero.heroArmor</h5>
+                                <h5>Evasion: @hero.heroEvasion%</h5>
+                                <h5>Magic Resistance: @hero.heroMagicRes%</h5>
+                                <h5>Status Resistance: @hero.heroStatusRes%</h5>
+                                <h5>Spell Amp: @hero.heroSpellAmp%</h5>
+                                
+                            }
+                        }
                     }
-                }
                 </p>
             </div>
-            <form>
-                @{
-                    for (int i = 0; i < 6; i++)
+            <div class="text-center">
+                <h2>Inventory</h2>
+                <div class="text-center">
+                    <form>
+                        @{
+                            for (int i = 0; i < 6; i++)
+                            {
+                                <button type="submit" class="btn btn-success" name="buttonValue" value="allyItem_@i"
+                                    asp-action="SellItem">@Context.Session.GetString("allyItem_" + i)</button>
+                            }
+                        }
+                    </form>
+                </div>
+                <p>
+                    @using (Html.BeginForm("Calculator", "Home", FormMethod.Post))
                     {
-                        <button type="submit" class="btn btn-success" name="buttonValue" value="allyItem_@i"
-                            asp-action="SellItem">@Context.Session.GetString("allyItem_" + i)</button>
+                        int buttonId1 = 0;
+                        foreach (var item in Model.Items)
+                        {
+                            <button type="submit" class="btn btn-success" name="buttonValue" value="ally_@buttonId1" asp-action="Calculator">@item.itemName</button>
+                            buttonId1++;
+                        }
                     }
-                }
-            </form>
+                </p>
+            </div>
         </div>
         <div class="col">
-            <h1 class="display-4 text-center">@Context.Session.GetString("chosenEnemy") inventory</h1>
             <div class="text-center">
                 <p>
-                @using (Html.BeginForm("Calculator", "Home", FormMethod.Post))
-                {
-                    int buttonId1 = 0;
-                    foreach (var item in Model)
-                    {
-                        <button type="submit" class="btn btn-success" name="buttonValue" value="enemy_@buttonId1" asp-action="Calculator">@item.itemName</button>
-                        buttonId1++;
+                    @{
+                        foreach (var hero in Model.Heroes)
+                        {
+                            if (hero.heroName == Context.Session.GetString("chosenEnemy"))
+                            {
+                                <h2>@hero.heroName</h2>
+                                <h5>Strength: @hero.heroStatRed</h5>
+                                <h5>Agility: @hero.heroStatGreen</h5>
+                                <h5>Intelligence: @hero.heroStatBlue</h5>
+                                <h5>Health: @hero.heroHealth</h5>
+                                <h5>Mana: @hero.heroMana</h5>
+                                <h5>Attack Damage: @hero.heroAttackDmgLower-@hero.heroAttackDmgHigher</h5>
+                                int attackSpeed = hero.heroAttackSpeed + hero.heroStatGreen;
+                                <h5>Attack Speed: @attackSpeed</h5>
+                                <h5>Armor: @hero.heroArmor</h5>
+                                <h5>Evasion: @hero.heroEvasion%</h5>
+                                <h5>Magic Resistance: @hero.heroMagicRes%</h5>
+                                <h5>Status Resistance: @hero.heroStatusRes%</h5>
+                                <h5>Spell Amp: @hero.heroSpellAmp%</h5>
+                                
+                            }
+                        }
                     }
-                }
                 </p>
             </div>
-            <form>
-                @{
-                    for (int i = 0; i < 6; i++)
+            <div class="text-center">
+                <h2>Inventory</h2>
+                <div class="text-center">
+                    <form>
+                        @{
+                            for (int i = 0; i < 6; i++)
+                            {
+                                <button type="submit" class="btn btn-success" name="buttonValue" value="enemyItem_@i"
+                                    asp-action="SellItem">@Context.Session.GetString("enemyItem_" + i)</button>
+                            }
+                        }
+                    </form>
+                </div>
+                <p>
+                    @using (Html.BeginForm("Calculator", "Home", FormMethod.Post))
                     {
-                        <button type="submit" class="btn btn-success" name="buttonValue" value="enemyItem_@i"
-                            asp-action="SellItem">@Context.Session.GetString("enemyItem_" + i)</button>
+                        int buttonId1 = 0;
+                        foreach (var item in Model.Items)
+                        {
+                            <button type="submit" class="btn btn-success" name="buttonValue" value="enemy_@buttonId1" asp-action="Calculator">@item.itemName</button>
+                            buttonId1++;
+                        }
                     }
-                }
-            </form>
+                </p>
+            </div>
         </div>
     </div>
 </div>

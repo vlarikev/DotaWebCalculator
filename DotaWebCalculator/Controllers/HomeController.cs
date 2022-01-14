@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotaWebCalculator.Interfaces;
@@ -47,14 +48,14 @@ namespace DotaWebCalculator.Controllers
                 HttpContext.Session.SetInt32("isEnemyChosen", 1);
                 HttpContext.Session.SetString("chosenEnemy", GetAllHeroes().Where(i => i.heroId == int.Parse(strParts[1])).FirstOrDefault().heroName);
             }
-            
+
             return View(GetAllHeroes());
         }
 
         private const int maxSlot = 6;
         public IActionResult Calculator()
         {
-            return View(GetAllItems());
+            return View(HeroesItemsModel());
         }
 
         [HttpPost]
@@ -68,7 +69,7 @@ namespace DotaWebCalculator.Controllers
             if (strParts[0] == "enemy")
                 InventoryUpdate("enemyItem_", strParts[1]);
 
-            return View(GetAllItems());
+            return View(HeroesItemsModel());
         }
         private void InventoryUpdate(string value, string part)
         {
@@ -87,7 +88,7 @@ namespace DotaWebCalculator.Controllers
         {
             HttpContext.Session.SetString(buttonValue, "");
 
-            return RedirectToAction("Calculator", GetAllItems());
+            return RedirectToAction("Calculator", HeroesItemsModel());
         }
 
         private IEnumerable<Hero> GetAllHeroes()
@@ -99,6 +100,14 @@ namespace DotaWebCalculator.Controllers
         {
             var items = allitems.AllItems;
             return items;
+        }
+        private dynamic HeroesItemsModel()
+        {
+            dynamic model = new ExpandoObject();
+            model.Heroes = GetAllHeroes();
+            model.Items = GetAllItems();
+
+            return model;
         }
     }
 }
